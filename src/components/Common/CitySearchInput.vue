@@ -8,8 +8,8 @@
                     <button :disabled="searchInput.length < 2" class="city-search__btn" @click="searchWeather">Search</button>
                 </div>
                 <ul v-show="dropdownVisible" v-if="searchResults.length > 0 && searchInput.length > 0" class="dropdown exclude-blur">
-                    <li class="exclude-blur" v-for="city in searchResults" :key="city.geonameId" @click="selectCity(city.name)">
-                        {{ city.name }}
+                    <li class="exclude-blur" v-for="city in searchResults" :key="city.geonameId" @click="selectCity(city)">
+                        {{ city }}
                     </li>
                 </ul>
             </div>
@@ -22,7 +22,6 @@
 import axios from 'axios';
 import AddToChosen from './AddToChosen.vue';
 import CustomModal from './CustomModal.vue';
-
 
 //TODO: Think about ways to restructure, maybe move logic to parent.
 export default {
@@ -66,14 +65,34 @@ export default {
             this.$emit('open-modal', data);
         },
         async handleInputChange() {
+            const options = {
+                method: 'GET',
+                url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/cities',
+                params: { namePrefix: this.searchInput },
+                headers: {
+                    'X-RapidAPI-Key': 'd0019c55e3msh09ebf5eb98ff5c0p18c47bjsn2601faa7685e',
+                    'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
+                }
+            };
+
             try {
-                const response = await axios.get(
-                    `http://api.geonames.org/searchJSON?q=${encodeURIComponent(this.searchInput)}&maxRows=10&username=feathertest1`
-                );
-                this.searchResults = response.data.geonames;
+                const response = await axios.request(options);
+                this.searchResults = response.data.data.map((e) => e.city);
+                console.log(this.searchResults)
             } catch (error) {
                 this.openModal('Seems something went wrong');
             }
+
+            // Rewrote for other api due to work of Github Pages
+
+            // try {
+            //     const response = await axios.get(
+            //         `http://api.geonames.org/searchJSON?q=${encodeURIComponent(this.searchInput)}&maxRows=10&username=feathertest1`
+            //     );
+            //     this.searchResults = response.data.geonames;
+            // } catch (error) {
+            //     this.openModal('Seems something went wrong');
+            // }
         },
         selectCity(cityName) {
             this.searchInput = cityName;
