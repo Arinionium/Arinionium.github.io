@@ -44,10 +44,13 @@ Common/AddToChosen - component with buttons to add card to chosen (logic for rem
 Common/AppHeader - app's header with logo, title and router-link's to pages.
 Common/LoadingSpinner - component for displaying spinner loader.
 Common/CustomModal - custom modal made to display modals (implemented through slots and this.$parent.$on(..., ...)).
-Common/CitySearchInput - contains logic for: autocomplete input (initialy implemented with Geonames API but later was changed to GeoDB API), adding to chosen, getting weather data on request.
-## DUE TO BEING FREE API ACCEPTS ONLY ONE REQUEST IN SECOND.
-For getting weather from city uses Openweathermap API.
+Common/CitySearchInput - contains logic for: autocomplete input (initialy implemented with Geonames API but later was changed to GeoDB API), adding to chosen, getting weather data on request. For getting weather from city uses Openweathermap API.
+
+## DUE TO BEING FREE GeoDB API ACCEPTS ONLY ONE REQUEST IN SECOND.
+
 ## Because Openweathermap API also free it gives you only data for current weather which not suitable for Charts. So 5 days Openweather API where used which gives you data about changes in weather every 3 hours for next five days. Data for one day was filtered and used as data for displaying Day weather. Another issue that it gives you data from current MOMENT SO IF YOU USING IT LATE IN EVENING DAY Charts can have only one point. To display FIVE days Charts data were reduced to average for day.
+
+____________________________________________________________________________
 
 Weather/WeatherDisplay - displays charts and tables of weather data. Contains logic for manipulating data for showing and switching view between Day and 5 day (Week).
 Weather/WeatherComponent - component for displaying other components together. Also contains logic for deleting weather cards. 
