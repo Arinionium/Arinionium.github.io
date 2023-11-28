@@ -4,11 +4,11 @@
         <div class="city-search__wrap">
             <div class="city-search__input">
                 <div class="input__inside-wrap">
-                    <input @click="showDropdown" @blur="hideDropdown" v-model="searchInput" @input="handleInputChange" placeholder="Enter your city name" />
+                    <input @mousedown="showDropdown" @focus="showDropdown" @blur="hideDropdown" v-model="searchInput" @input="handleInputChange" placeholder="Enter your city name" />
                     <button :disabled="searchInput.length < 2" class="city-search__btn" @click="searchWeather">Search</button>
                 </div>
-                <ul v-show="dropdownVisible" v-if="searchResults.length > 0 && searchInput.length > 0" class="dropdown">
-                    <li v-for="city in searchResults" :key="city.geonameId" @click="selectCity(city.name)">
+                <ul v-show="dropdownVisible" v-if="searchResults.length > 0 && searchInput.length > 0" class="dropdown exclude-blur">
+                    <li class="exclude-blur" v-for="city in searchResults" :key="city.geonameId" @click="selectCity(city.name)">
                         {{ city.name }}
                     </li>
                 </ul>
@@ -23,10 +23,26 @@ import axios from 'axios';
 import AddToChosen from './AddToChosen.vue';
 import CustomModal from './CustomModal.vue';
 
+
+//TODO: Think about ways to restructure, maybe move logic to parent.
 export default {
     components: {
         AddToChosen,
         CustomModal
+    },
+    props: {
+        chosenPage: {
+            type: Boolean,
+            default: false
+        },
+        componentIndex: {
+            type: Number,
+            default: null
+        },
+        currentUsersCity: {
+            type: String,
+            default: null
+        }
     },
     data() {
         return {
@@ -41,14 +57,12 @@ export default {
     },
     methods: {
         hideDropdown() {
-            setTimeout(() => {
-                this.dropdownVisible = false
-            }, 100);
+            setTimeout(() => this.dropdownVisible = false, 300)
         },
         showDropdown() {
             this.dropdownVisible = true;
         },
-        openModal(data) {
+        openModal(data) { // TODO: Make it global later
             this.$emit('open-modal', data);
         },
         async handleInputChange() {
@@ -71,8 +85,9 @@ export default {
                 this.openModal(`You have too many chosen cities, delete one or more.`);
                 return
             }
+
             this.addedToChosen = true;
-            this.chosenCities.push(this.searchedCity);
+            this.chosenCities.push(this.componentIndex === 0 && !this.chosenPage && !this.searchedCity ? this.currentUsersCity : this.searchedCity);
             localStorage.setItem('chosenCities', JSON.stringify(this.chosenCities));
         },
          searchWeather() {
@@ -83,7 +98,6 @@ export default {
 
             axios.get(weatherApiUrl)
                 .then(response => {
-                    console.log('Weather Data:', response.data);
                     this.$emit('sendWeatherData', response.data);
                     this.searchResults = [];
                     this.isSearchValid = true;
@@ -96,6 +110,9 @@ export default {
                 });
         },
     },
+    mounted() {
+        !this.chosenPage && this.componentIndex === 0 ? this.isSearchValid = true : this.isSearchValid = false
+    }
 };
 </script>
 

@@ -12,10 +12,13 @@
     </custom-modal>
     <div class="weather-page__wrapper">
       <main class="weather-page__main-wrap">
-        <weather-component @delete-component="triggerDeleteComponentModal(index)" class="weather-component" v-for="(component, index) in components" :key="component.hash" />
-        <button class="add-component-btn" @click="createNewComponent">
-            <i class="fas fa-plus"></i>
-        </button>
+        <weather-component :componentIndex="index"  @delete-component="triggerDeleteComponentModal(index)" class="weather-component" v-for="(component, index) in components" :key="component.hash" />
+        <div class="add-component__btn-wrap">
+          <button class="add-component-btn" @click="createNewComponent">
+              <i class="fas fa-plus"></i>
+          </button>
+        </div>
+        
       </main>
     </div>
   </div>
@@ -38,8 +41,8 @@ export default {
   },
   methods: {
     createNewComponent() {
-      if (this.components.length < 5){
-        this.components.push({component: WeatherComponent, hash: new Date().getTime() });
+      if (this.components.length < 5) {
+        this.components.push({ component: WeatherComponent, hash: new Date().getTime() });
       } else {
         this.$emit('open-modal', 'You can\'t have more than 5 charts at the same time. Delete one if you want to add new.');
       }
@@ -59,6 +62,10 @@ export default {
 <style scoped>
 .weather-component {
   margin-bottom: 20px;
+}
+
+.add-component__btn-wrap {
+  padding-bottom: 20px;
 }
 
 .add-component-btn {

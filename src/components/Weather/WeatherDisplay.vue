@@ -5,7 +5,7 @@
           <button @click="switchView('week')" :class="{ active: currentView === 'week' }">Week</button>
         </div>
         
-        <div v-if="currentView === 'day'">
+        <div v-if="currentView === 'day' || windowWidth <= 767">
           <div class="weather-display__block">
             <h3 class="block__text">{{ currentCityName }}, {{ new Date().toLocaleDateString()  }}</h3>
             <p class="block__temp">Temperature: {{ Math.floor(averageWeatherToday.avgTemp) }}°C</p>
@@ -15,14 +15,14 @@
           </div>
         </div>
 
-        <div v-else-if="currentView === 'week'">
+        <div v-else-if="currentView === 'week' && windowWidth > 767">
             <div class="weather-display__block">
                 <div class="block__name">{{ currentCityName }} </div>
                 <div class="block__column-wrap _week">
                 <div class="block__column" v-for="dailyData in weeklyAverage" :key="dailyData.date">
                     <h3 class="block__text">{{ new Date(dailyData.day).toLocaleDateString() }}</h3>
-                    <p class="block__temp">Temp.: {{ Math.floor(dailyData.averageTemp) }}°C</p>
-                    <p class="block__feels">Feels Like: {{ Math.floor(dailyData.averageFeelsLike) }}°C</p>
+                    <p class="block__temp">Temp.: {{ dailyData.averageTemp.toFixed(2) }}°C</p>
+                    <p class="block__feels">Feels Like: {{ dailyData.averageFeelsLike.toFixed(2) }}°C</p>
                     <p class="block__humidity">Humidity: {{ dailyData.averageHumidity.toFixed(2) }}%</p>
                     <p class="block__wind">Wind Speed: {{ dailyData.averageWindSpeed.toFixed(2) }} m/s</p>
                 </div>
@@ -51,6 +51,7 @@ export default {
     data() {
         return {
             currentView: 'day',
+            windowWidth: window.innerWidth
         };
     },
     computed: {
@@ -125,7 +126,6 @@ export default {
                     day: thisDay
                 };
 
-                console.log(result)
                 return result;
             }, {});
         },
@@ -197,13 +197,14 @@ export default {
             });
         },
         renderWeekChart(context) {
-            const weatherDates = this.weatherData.list.map(dailyData => dailyData.dt_txt);
-            const dailyTempArr = this.weatherData.list.map(dailyData => dailyData.main.temp);
-            
+            const weatherDates = this.weatherData.list.map(dailyData => new Date(dailyData.dt_txt).toLocaleDateString());
+            const uniqeWeatherDates = Array.from(new Set(weatherDates), (x) => x);
+            const dailyTempArr = Object.values(this.weeklyAverage).map(dailyData => dailyData.averageTemp);
+                                                
             this.chart = new Chart(context, {
                 type: 'line',
                 data: {
-                    labels: weatherDates,
+                    labels: uniqeWeatherDates,
                     datasets: [
                         {
                             label: 'Temperature',
@@ -222,7 +223,7 @@ export default {
                             title: {
                                 display: true,
                                 text: 'Date',
-                            },
+                            }
                         },
                         y: {
                             type: 'linear',
@@ -230,15 +231,22 @@ export default {
                             title: {
                                 display: true,
                                 text: 'Temperature (°C)',
-                            },
+                            }
                         },
                     },
                 },
             });
+        },
+        windowWidhtChange() {
+            this.windowWidth = window.innerWidth;
         }
     },
     mounted() {
         this.renderChart();
+        window.addEventListener('resize', this.windowWidhtChange);
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.windowWidhtChange);
     },
     watch: {
         weatherData: {
@@ -305,5 +313,10 @@ export default {
 .active {
     background-color: #000;
     color: #fff;
+}
+
+.weather-display__chart canvas {
+    width: 100% !important;
+    height: auto !important;
 }
 </style>
