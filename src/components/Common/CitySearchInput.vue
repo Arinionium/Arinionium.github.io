@@ -1,38 +1,56 @@
 <template>
    <div class="city-search">
+        <custom-modal />
         <div class="city-search__wrap">
             <div class="city-search__input">
                 <div class="input__inside-wrap">
-                    <input v-model="searchInput" @input="handleInputChange" placeholder="Enter your city name" />
-                    <button class="city-search__btn" @click="searchWeather">Search</button>
+                    <input @click="showDropdown" @blur="hideDropdown" v-model="searchInput" @input="handleInputChange" placeholder="Enter your city name" />
+                    <button :disabled="searchInput.length < 2" class="city-search__btn" @click="searchWeather">Search</button>
                 </div>
-                <ul v-if="searchResults.length > 0 && searchInput.length > 0" class="dropdown">
+                <ul v-show="dropdownVisible" v-if="searchResults.length > 0 && searchInput.length > 0" class="dropdown">
                     <li v-for="city in searchResults" :key="city.geonameId" @click="selectCity(city.name)">
                         {{ city.name }}
                     </li>
                 </ul>
             </div>
         </div>
-        <add-to-chosen class="add-to-chosen" @addToChosen="addToChosenCities" />
+        <add-to-chosen :disabled="!isSearchValid" :isChosen="addedToChosen" class="add-to-chosen" @addToChosen="addToChosenCities" />
    </div>
 </template>
 
 <script>
 import axios from 'axios';
 import AddToChosen from './AddToChosen.vue';
+import CustomModal from './CustomModal.vue';
 
 export default {
     components: {
-        AddToChosen
+        AddToChosen,
+        CustomModal
     },
     data() {
         return {
+            searchedCity: '',
             searchInput: '',
             searchResults: [],
-            chosenCities: JSON.parse(localStorage.getItem('chosenCities')) || []
+            chosenCities: JSON.parse(localStorage.getItem('chosenCities')) || [],
+            isSearchValid: false,
+            addedToChosen: false,
+            dropdownVisible: true
         };
     },
     methods: {
+        hideDropdown() {
+            setTimeout(() => {
+                this.dropdownVisible = false
+            }, 100);
+        },
+        showDropdown() {
+            this.dropdownVisible = true;
+        },
+        openModal(data) {
+            this.$emit('open-modal', data);
+        },
         async handleInputChange() {
             try {
                 const response = await axios.get(
@@ -40,18 +58,21 @@ export default {
                 );
                 this.searchResults = response.data.geonames;
             } catch (error) {
-                console.error('Seems your city not in our database:', error);
+                this.openModal('Seems something went wrong');
             }
         },
         selectCity(cityName) {
             this.searchInput = cityName;
             this.searchResults = [];
-
-            // Add functionality which will call weather api
         },
         addToChosenCities() {
-            if (!this.searchInput) return;
-            this.chosenCities.push(this.searchInput);
+            if (!this.searchedCity && !this.isSearchValid) return;
+            if (this.chosenCities.length > 4) {
+                this.openModal(`You have too many chosen cities, delete one or more.`);
+                return
+            }
+            this.addedToChosen = true;
+            this.chosenCities.push(this.searchedCity);
             localStorage.setItem('chosenCities', JSON.stringify(this.chosenCities));
         },
          searchWeather() {
@@ -65,9 +86,13 @@ export default {
                     console.log('Weather Data:', response.data);
                     this.$emit('sendWeatherData', response.data);
                     this.searchResults = [];
+                    this.isSearchValid = true;
+                    this.searchedCity = this.searchInput;
+                    this.addedToChosen = false;
                 })
                 .catch(error => {
-                    console.error('Error fetching weather data:', error);
+                    this.openModal(`No results for ${this.searchInput}. Check if city name correct. ${error}`);
+                    this.isSearchValid = false;
                 });
         },
     },
@@ -135,7 +160,7 @@ input {
     left: 0;
     right: 0;
     background-color: #fff;
-    z-index: 10;
+    z-index: 2;
 }
 
 .dropdown li {

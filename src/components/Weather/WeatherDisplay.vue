@@ -7,7 +7,7 @@
         
         <div v-if="currentView === 'day'">
           <div class="weather-display__block">
-            <h3 class="block__text">{{ new Date().toLocaleDateString()  }}</h3>
+            <h3 class="block__text">{{ currentCityName }}, {{ new Date().toLocaleDateString()  }}</h3>
             <p class="block__temp">Temperature: {{ Math.floor(averageWeatherToday.avgTemp) }}°C</p>
             <p class="block__feels">Feels Like: {{  Math.floor(averageWeatherToday.avgFeelsLike) }}°C</p>
             <p class="block__humidity">Humidity: {{ averageWeatherToday.minHumidity }} - {{ averageWeatherToday.maxHumidity }}%</p>
@@ -16,15 +16,18 @@
         </div>
 
         <div v-else-if="currentView === 'week'">
-          <div class="weather-display__block _week">
-            <div class="block__column" v-for="dailyData in weeklyAverage" :key="dailyData.date">
-                <h3 class="block__text">{{ new Date(dailyData.day).toLocaleDateString() }}</h3>
-                <p class="block__temp">Temp.: {{ Math.floor(dailyData.averageTemp) }}°C</p>
-                <p class="block__feels">Feels Like: {{ Math.floor(dailyData.averageFeelsLike) }}°C</p>
-                <p class="block__humidity">Humidity: {{ dailyData.averageHumidity.toFixed(2) }}%</p>
-                <p class="block__wind">Wind Speed: {{ dailyData.averageWindSpeed.toFixed(2) }} m/s</p>
+            <div class="weather-display__block">
+                <div class="block__name">{{ currentCityName }} </div>
+                <div class="block__column-wrap _week">
+                <div class="block__column" v-for="dailyData in weeklyAverage" :key="dailyData.date">
+                    <h3 class="block__text">{{ new Date(dailyData.day).toLocaleDateString() }}</h3>
+                    <p class="block__temp">Temp.: {{ Math.floor(dailyData.averageTemp) }}°C</p>
+                    <p class="block__feels">Feels Like: {{ Math.floor(dailyData.averageFeelsLike) }}°C</p>
+                    <p class="block__humidity">Humidity: {{ dailyData.averageHumidity.toFixed(2) }}%</p>
+                    <p class="block__wind">Wind Speed: {{ dailyData.averageWindSpeed.toFixed(2) }} m/s</p>
+                </div>
+              </div>
             </div>
-          </div>
         </div>
 
         <div class="weather-display__chart">
@@ -51,6 +54,9 @@ export default {
         };
     },
     computed: {
+        currentCityName() {
+            return this.weatherData.city.name;
+        },
         filteredWeatherToday() {
             const today = new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'numeric', year: 'numeric' });
             if (!this.weatherData) return []
@@ -271,7 +277,7 @@ export default {
     background-color:#fff;
 }
 
-.weather-display__block._week {
+.block__column-wrap._week {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -286,9 +292,14 @@ export default {
     padding: 5px 0;
 }
 
-.block__text {
+.block__text,
+.block__name {
     text-align: center;
     font-weight: 700;
+}
+
+.block__name {
+    padding-bottom: 10px;
 }
 
 .active {

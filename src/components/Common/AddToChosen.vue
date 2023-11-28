@@ -1,10 +1,10 @@
 <template>
     <div>
-        <button v-if="!isChosen" @click.stop="addToChosen">
+        <button :disabled="disabled" :class="{'_disabled': disabled}" v-if="!isChosen" @click.stop="addToChosen">
             <i class="fas fa-plus"></i> Add to Chosen
         </button>
         <button class="chosen" v-if="isChosen" @click.stop="removeFromChosen">
-            Added to Chosen!
+            <i class="fas fa-minus"></i> Added to Chosen!
         </button>
     </div>
 </template>
@@ -13,6 +13,7 @@
 export default {
     props: {
         isChosen: Boolean,
+        disabled: Boolean
     },
     methods: {
         addToChosen() {
@@ -38,7 +39,14 @@ button {
 
 button:hover,
 button.chosen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #000;
     color: #fff;
+}
+
+button._disabled {
+    opacity: 0.3;
 }
 </style>
