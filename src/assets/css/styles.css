@@ -93,11 +93,19 @@ h6 {
     font-weight: 400;
 }
 
-/*--------------------*/
+/*------ Containers ------*/
 
 .container {
     width: 100%;
     max-width: 1200px;
     min-width: 360px;
     margin: 0 auto;
+}
+
+/* Media query */
+
+@media (max-width: 1200px) {
+    .container {
+        padding: 0 50px;
+    }
 }
