@@ -41,9 +41,13 @@ Contains index.js for routing with Vue router.
 
 ## 4. Components
 Common/AddToChosen - component with buttons to add card to chosen (logic for removing was not implemented, but you still can delete them on Chosen Page). Logic for adding to chosen placed in CitySearchInput.vue.
+
 Common/AppHeader - app's header with logo, title and router-link's to pages.
+
 Common/LoadingSpinner - component for displaying spinner loader.
+
 Common/CustomModal - custom modal made to display modals (implemented through slots and this.$parent.$on(..., ...)).
+
 Common/CitySearchInput - contains logic for: autocomplete input (initialy implemented with Geonames API but later was changed to GeoDB API), adding to chosen, getting weather data on request. For getting weather from city uses Openweathermap API.
 
 ### DUE TO BEING FREE GeoDB API ACCEPTS ONLY ONE REQUEST IN SECOND.
