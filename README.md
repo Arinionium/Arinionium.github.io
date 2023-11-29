@@ -57,10 +57,13 @@ Common/CitySearchInput - contains logic for: autocomplete input (initialy implem
 ____________________________________________________________________________
 
 Weather/WeatherDisplay - displays charts and tables of weather data. Contains logic for manipulating data for showing and switching view between Day and 5 day (Week).
+
 Weather/WeatherComponent - component for displaying other components together. Also contains logic for deleting weather cards. 
 Also has logic for displaying first component on page with weather based on users current place.
+___________________________________________________________________________
 
 pages/WeatherPage - component for Home page. Contains logic for adding new weather cards and deleting them.
+
 pages/WeatherChosen - component for Chosen page. Almost same as previous just for Chosen page.
 
 ## 5. API interactions
