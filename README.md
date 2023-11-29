@@ -46,7 +46,7 @@ Common/LoadingSpinner - component for displaying spinner loader.
 Common/CustomModal - custom modal made to display modals (implemented through slots and this.$parent.$on(..., ...)).
 Common/CitySearchInput - contains logic for: autocomplete input (initialy implemented with Geonames API but later was changed to GeoDB API), adding to chosen, getting weather data on request. For getting weather from city uses Openweathermap API.
 
-## DUE TO BEING FREE GeoDB API ACCEPTS ONLY ONE REQUEST IN SECOND.
+### DUE TO BEING FREE GeoDB API ACCEPTS ONLY ONE REQUEST IN SECOND.
 
 ## Because Openweathermap API also free it gives you only data for current weather which not suitable for Charts. So 5 days Openweather API where used which gives you data about changes in weather every 3 hours for next five days. Data for one day was filtered and used as data for displaying Day weather. Another issue that it gives you data from current moment SO IF YOU USING IT LATE IN EVENING day Charts can have only one point. To display FIVE days Charts data were reduced to average for day.
 
