@@ -62,7 +62,7 @@ export default {
             this.$emit('delete-component');
         },
          async getCurrentUsersCity() {
-            const API_KEY = '436cd60a69bf64';
+            const API_KEY = process.env.VUE_APP_IP;
 
             try {
                 const response = await axios.get(`https://ipinfo.io?token=${API_KEY}`);
@@ -75,7 +75,7 @@ export default {
             }
         },
         async getChosenCity() {
-            const apiKey = 'd5c10c96e44dec1bad116a142f8a817c';
+            const apiKey = process.env.VUE_APP_WEATHER;
 
             this.displayLoadSpinner = true;
 

@@ -70,7 +70,7 @@ export default {
                 url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/cities',
                 params: { namePrefix: this.searchInput },
                 headers: {
-                    'X-RapidAPI-Key': 'd0019c55e3msh09ebf5eb98ff5c0p18c47bjsn2601faa7685e',
+                    'X-RapidAPI-Key': process.env.VUE_APP_SEARCH_INPUT,
                     'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
                 }
             };
@@ -110,7 +110,7 @@ export default {
             localStorage.setItem('chosenCities', JSON.stringify(this.chosenCities));
         },
          searchWeather() {
-            const apiKey = 'd5c10c96e44dec1bad116a142f8a817c';
+            const apiKey = process.env.VUE_APP_WEATHER;
             const weatherApiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(
                 this.searchInput
              )}&units=metric&appid=${apiKey}`;
