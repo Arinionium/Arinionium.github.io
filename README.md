@@ -88,3 +88,5 @@ In package.json:
     "build": "vue-cli-service build",
     "deploy": "npm run build && gh-pages -d dist",
 ```
+## 8. Not added
+Due to free api from Openweathermap not being well suited for it day and night switcher wasn't implemented.
