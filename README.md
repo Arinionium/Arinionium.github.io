@@ -48,7 +48,7 @@ Common/CitySearchInput - contains logic for: autocomplete input (initialy implem
 
 ## DUE TO BEING FREE GeoDB API ACCEPTS ONLY ONE REQUEST IN SECOND.
 
-## Because Openweathermap API also free it gives you only data for current weather which not suitable for Charts. So 5 days Openweather API where used which gives you data about changes in weather every 3 hours for next five days. Data for one day was filtered and used as data for displaying Day weather. Another issue that it gives you data from current MOMENT SO IF YOU USING IT LATE IN EVENING DAY Charts can have only one point. To display FIVE days Charts data were reduced to average for day.
+## Because Openweathermap API also free it gives you only data for current weather which not suitable for Charts. So 5 days Openweather API where used which gives you data about changes in weather every 3 hours for next five days. Data for one day was filtered and used as data for displaying Day weather. Another issue that it gives you data from current moment SO IF YOU USING IT LATE IN EVENING day Charts can have only one point. To display FIVE days Charts data were reduced to average for day.
 
 ____________________________________________________________________________
 
@@ -61,13 +61,16 @@ pages/WeatherChosen - component for Chosen page. Almost same as previous just fo
 
 ## 5. API interactions
 Geonames API - initialy used for city's input autocomplete (city search dropdown with propositions for autocomplete). Endpoints base url: http://api.geonames.org/searchJSON . Based on passed params returns number(based on params) of locations with similar names. https://www.geonames.org/
+
 GeoDB API - used for city's input autocomplete (city search dropdown with propositions for autocomplete). Endpoints base url: https://wft-geo-db.p.rapidapi.com/v1/geo/cities . Based on passed params for request returns 5 cities with similar names. https://rapidapi.com/wirefreethought/api/geodb-cities
 ## GeoDB has limit on requests in short period of time so when typing fast in input can give errors.
+
 Ipinfo API - used to get data about current place of App user to display first weather card based on his\her location. Endpoints base url: https://ipinfo.io .
+
 Openweathermap API - used for getting weather data. Endpoint base url: https://api.openweathermap.org/data/2.5/forecast . 5 days Forcast API was used because it's only free API (among Openweather APIs) with which you can get more data then just for current weather. Response contains data for next 5 days for every 3 hours. Data were filtere to be used for Charts both for One Day and for Five Days. 
 More about API: https://openweathermap.org/forecast5 /  https://openweathermap.org/api .
 
-## Repeating DISCLAIMER: Because Openweathermap API also free it gives you only data for current weather which not suitable for Charts. So 5 days Openweather API where used which gives you data about changes in weather every 3 hours for next five days. Data for one day was filtered and used as data for displaying Day weather. Another issue that it gives you data from current MOMENT SO IF YOU USING IT LATE IN EVENING DAY Charts can have only one point. To display FIVE days Charts data were reduced to average for day.
+## Repeating DISCLAIMER: Because Openweathermap API also free it gives you only data for current weather which not suitable for Charts. So 5 days Openweather API where used which gives you data about changes in weather every 3 hours for next five days. Data for one day was filtered and used as data for displaying Day weather. Another issue that it gives you data from current moment SO IF YOU USING IT LATE IN EVENING day Charts can have only one point. To display FIVE days Charts data were reduced to average for day.
 
 ## 6. Styling
 
